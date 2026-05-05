@@ -29,7 +29,7 @@ public class VolunteerService {
             .orElseThrow(() -> new RuntimeException("Volunteer not found"));
             
         VolunteerProfileDto dto = new VolunteerProfileDto();
-        dto.setId(volunteer.getUserId());
+        dto.setId(volunteer.getUser().getId());
         dto.setName(volunteer.getUser().getName());
         dto.setEmail(volunteer.getUser().getEmail());
         dto.setTotalHours(volunteer.getTotalHours());

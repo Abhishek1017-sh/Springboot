@@ -48,7 +48,7 @@ public class TaskService {
 
         if (taskDto.getRequiredSkillIds() != null) {
             Set<Skill> skills = new HashSet<>(skillRepository.findAllById(taskDto.getRequiredSkillIds()));
-            task.setRequiredSkills(skills);
+            task.setSkills(skills);
         }
 
         task = taskRepository.save(task);
@@ -65,8 +65,8 @@ public class TaskService {
             dto.setDescription(task.getDescription());
             dto.setStartTime(task.getStartTime());
             dto.setEndTime(task.getEndTime());
-            if (task.getRequiredSkills() != null) {
-                dto.setRequiredSkillIds(task.getRequiredSkills().stream().map(Skill::getId).collect(Collectors.toSet()));
+            if (task.getSkills() != null) {
+                dto.setRequiredSkillIds(task.getSkills().stream().map(Skill::getId).collect(Collectors.toSet()));
             }
             return dto;
         }).collect(Collectors.toList());

@@ -9,6 +9,7 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.List;
@@ -22,6 +23,7 @@ public class VmsApplication {
 
     @Bean
     public CommandLineRunner demoRunner(
+            EventRepository eventRepository,
             UserRepository userRepository,
             VolunteerRepository volunteerRepository,
             SkillRepository skillRepository,
@@ -37,7 +39,14 @@ public class VmsApplication {
             Skill javaSkill = skillRepository.save(new Skill(null, "Java"));
             Skill reactSkill = skillRepository.save(new Skill(null, "React Native"));
 
-            // 2. Create User and Volunteer
+            // 2. Create Event
+            Event event = new Event();
+            event.setName("Tech Meetup");
+            event.setLocation("Tech Park");
+            event.setDate(LocalDate.now().plusDays(1));
+            event = eventRepository.save(event);
+
+            // 3. Create User and Volunteer
             User user = userRepository.save(User.builder().name("Aditya Shukla").email("aditya@vms.com").password("pass").role(Role.VOLUNTEER).build());
             
             HashSet<Skill> volunteerSkills = new HashSet<>();
@@ -55,6 +64,7 @@ public class VmsApplication {
                     .description("Create Spring Boot REST APIs")
                     .startTime(LocalDateTime.now().plusDays(1).withHour(10))
                     .endTime(LocalDateTime.now().plusDays(1).withHour(14))
+                    .event(event)
                     .skills(task1Skills)
                     .build());
 
@@ -67,6 +77,7 @@ public class VmsApplication {
                     .description("Connect React Native to Spring Boot")
                     .startTime(LocalDateTime.now().plusDays(1).withHour(16))
                     .endTime(LocalDateTime.now().plusDays(1).withHour(20))
+                    .event(event)
                     .skills(task2Skills)
                     .build());
                     
@@ -76,6 +87,7 @@ public class VmsApplication {
                     .description("Overlaps with task 1")
                     .startTime(LocalDateTime.now().plusDays(1).withHour(12))
                     .endTime(LocalDateTime.now().plusDays(1).withHour(15))
+                    .event(event)
                     .skills(task1Skills)
                     .build());
 

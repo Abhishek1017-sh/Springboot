@@ -30,5 +30,6 @@ public class Feedback {
     private String comment;
 
     @Column(name = "created_at")
+    @Builder.Default
     private LocalDateTime createdAt = LocalDateTime.now();
 }

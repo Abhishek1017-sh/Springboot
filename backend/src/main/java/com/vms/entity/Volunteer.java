@@ -23,8 +23,10 @@ public class Volunteer {
     private User user;
 
     @Column(name = "total_hours")
+    @Builder.Default
     private Double totalHours = 0.0;
 
+    @Builder.Default
     private Double rating = 0.0;
 
     @ManyToMany(fetch = FetchType.LAZY)
@@ -33,6 +35,7 @@ public class Volunteer {
         joinColumns = @JoinColumn(name = "volunteer_id"),
         inverseJoinColumns = @JoinColumn(name = "skill_id")
     )
+    @Builder.Default
     private Set<Skill> skills = new HashSet<>();
 
     @ManyToMany(fetch = FetchType.LAZY)
@@ -41,6 +44,7 @@ public class Volunteer {
         joinColumns = @JoinColumn(name = "volunteer_id"),
         inverseJoinColumns = @JoinColumn(name = "badge_id")
     )
+    @Builder.Default
     private Set<Badge> badges = new HashSet<>();
 
     @OneToMany(mappedBy = "volunteer", cascade = CascadeType.ALL, orphanRemoval = true)
