@@ -1,3 +1,19 @@
+# Maven
+target/
+backend/target/
+*.jar
+*.war
+*.ear
+
+# Eclipse
+.project
+.classpath
+.settings/
+
+# IntelliJ IDEA
+.idea/
+*.iml
+*.iws
 # Compiled class file
 *.class
 
@@ -50,6 +66,9 @@ build/
 # VS Code
 .vscode/
 
+# OS generated files
+.DS_Store
+Thumbs.db
 # Maven
 target/
 pom.xml.tag
