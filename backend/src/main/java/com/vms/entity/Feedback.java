@@ -2,6 +2,7 @@ package com.vms.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "feedback")
@@ -22,6 +23,12 @@ public class Feedback {
     @JoinColumn(name = "target_id", nullable = false)
     private User target;
 
+    @Column(nullable = false)
     private Integer rating;
+    
+    @Column(length = 500)
     private String comment;
+
+    @Column(name = "created_at")
+    private LocalDateTime createdAt = LocalDateTime.now();
 }

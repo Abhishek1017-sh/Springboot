@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.*;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.List;
 
 @Entity
 @Table(name = "volunteers")
@@ -11,7 +12,7 @@ import java.util.Set;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-@EqualsAndHashCode(exclude = {"skills", "badges"})
+@EqualsAndHashCode(exclude = {"skills", "badges", "availabilities"})
 public class Volunteer {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -21,7 +22,9 @@ public class Volunteer {
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
+    @Column(name = "total_hours")
     private Double totalHours = 0.0;
+
     private Double rating = 0.0;
 
     @ManyToMany(fetch = FetchType.LAZY)
@@ -39,4 +42,7 @@ public class Volunteer {
         inverseJoinColumns = @JoinColumn(name = "badge_id")
     )
     private Set<Badge> badges = new HashSet<>();
+
+    @OneToMany(mappedBy = "volunteer", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Availability> availabilities;
 }
