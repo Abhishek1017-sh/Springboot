@@ -1,14 +1,11 @@
 package com.vms.entity;
 
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.Data;
 
 @Entity
 @Table(name = "assignments")
 @Data
-@NoArgsConstructor
-@AllArgsConstructor
-@Builder
 public class Assignment {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
