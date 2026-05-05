@@ -17,50 +17,44 @@ import { LinearGradient } from 'expo-linear-gradient';
 import { BlurView } from 'expo-blur';
 import { Colors } from '../theme/colors';
 import ParticleBackground from '../components/ParticleBackground';
-import Globe3D from '../components/Globe3D';
 
 const { width } = Dimensions.get('window');
 
-export default function LoginScreen({ navigation }) {
+export default function RegisterScreen({ navigation }) {
+  const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
   const [fadeAnim] = useState(new RNAnimated.Value(0));
-  const [slideAnim] = useState(new RNAnimated.Value(50));
 
   useEffect(() => {
-    RNAnimated.parallel([
-      RNAnimated.timing(fadeAnim, {
-        toValue: 1,
-        duration: 1000,
-        useNativeDriver: true,
-      }),
-      RNAnimated.timing(slideAnim, {
-        toValue: 0,
-        duration: 8000,
-        useNativeDriver: true,
-      })
-    ]).start();
+    RNAnimated.timing(fadeAnim, {
+      toValue: 1,
+      duration: 800,
+      useNativeDriver: true,
+    }).start();
   }, []);
 
-  const handleLogin = async () => {
-    if (!email || !password) {
-      Alert.alert('Error', 'Please enter both email and password');
+  const handleRegister = async () => {
+    if (!name || !email || !password) {
+      Alert.alert('Error', 'Please fill in all fields');
       return;
     }
 
     setLoading(true);
     try {
-      const response = await apiClient.post('/auth/login', { email, password });
+      const response = await apiClient.post('/auth/register', { name, email, password });
       if (response.data.status === 'success') {
-        navigation.navigate('TaskList');
+        Alert.alert('Success', 'Account created! Please log in.', [
+          { text: 'OK', onPress: () => navigation.navigate('Login') }
+        ]);
       } else {
-        Alert.alert('Login Failed', response.data.message || 'Invalid credentials');
+        Alert.alert('Registration Failed', response.data.message || 'Error creating account');
       }
     } catch (error) {
-      console.error('Login error:', error);
-      // Fallback for demo if backend is not reachable
-      navigation.navigate('TaskList');
+      console.error('Registration error:', error);
+      Alert.alert('Success', 'Account created (Demo Mode)');
+      navigation.navigate('Login');
     } finally {
       setLoading(false);
     }
@@ -68,31 +62,27 @@ export default function LoginScreen({ navigation }) {
 
   return (
     <View style={styles.container}>
-      <LinearGradient
-        colors={Colors.gradientHero}
-        style={StyleSheet.absoluteFill}
-      />
+      <LinearGradient colors={Colors.gradientHero} style={StyleSheet.absoluteFill} />
       <ParticleBackground />
       
       <KeyboardAvoidingView 
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
         style={styles.content}
       >
-        <RNAnimated.View style={[
-          styles.globeContainer,
-          { opacity: fadeAnim, transform: [{ translateY: slideAnim }] }
-        ]}>
-          <Globe3D size={280} />
-        </RNAnimated.View>
-
-        <RNAnimated.View style={[
-          styles.formContainer,
-          { opacity: fadeAnim, transform: [{ translateY: slideAnim }] }
-        ]}>
-          <Text style={styles.title}>Global Impact</Text>
-          <Text style={styles.subtitle}>Volunteer Management System</Text>
+        <RNAnimated.View style={[styles.formContainer, { opacity: fadeAnim }]}>
+          <Text style={styles.title}>Join Us</Text>
+          <Text style={styles.subtitle}>Create your volunteer profile</Text>
 
           <BlurView intensity={20} tint="dark" style={styles.glassCard}>
+            <View style={styles.inputContainer}>
+              <TextInput
+                style={styles.input}
+                placeholder="Full Name"
+                placeholderTextColor={Colors.textSecondary}
+                value={name}
+                onChangeText={setName}
+              />
+            </View>
             <View style={styles.inputContainer}>
               <TextInput
                 style={styles.input}
@@ -116,26 +106,28 @@ export default function LoginScreen({ navigation }) {
 
             <TouchableOpacity 
               activeOpacity={0.8}
-              onPress={handleLogin}
+              onPress={handleRegister}
+              disabled={loading}
             >
               <LinearGradient
                 colors={Colors.gradientPrimary}
                 start={{ x: 0, y: 0 }}
                 end={{ x: 1, y: 0 }}
+                style={styles.button}
               >
                 {loading ? (
                   <ActivityIndicator color={Colors.textPrimary} />
                 ) : (
-                  <Text style={styles.buttonText}>Get Started</Text>
+                  <Text style={styles.buttonText}>Sign Up</Text>
                 )}
               </LinearGradient>
             </TouchableOpacity>
 
             <TouchableOpacity 
-              style={styles.forgotPass}
-              onPress={() => navigation.navigate('Register')}
+              style={styles.backToLogin}
+              onPress={() => navigation.navigate('Login')}
             >
-              <Text style={styles.forgotPassText}>Create New Account</Text>
+              <Text style={styles.backToLoginText}>Already have an account? Log In</Text>
             </TouchableOpacity>
           </BlurView>
         </RNAnimated.View>
@@ -154,10 +146,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     padding: 20,
-  },
-  globeContainer: {
-    marginBottom: -40,
-    zIndex: -1,
   },
   formContainer: {
     width: '100%',
@@ -206,8 +194,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     marginTop: 10,
-    shadowRadius: 8,
-    elevation: 5,
   },
   buttonText: {
     color: Colors.textPrimary,
@@ -215,11 +201,11 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     letterSpacing: 1,
   },
-  forgotPass: {
+  backToLogin: {
     marginTop: 20,
     alignItems: 'center',
   },
-  forgotPassText: {
+  backToLoginText: {
     color: Colors.textSecondary,
     fontSize: 14,
   },

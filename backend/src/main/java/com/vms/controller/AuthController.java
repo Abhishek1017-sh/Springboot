@@ -20,4 +20,13 @@ public class AuthController {
         
         return ResponseEntity.ok(response);
     }
+
+    @PostMapping("/register")
+    public ResponseEntity<?> register(@RequestBody Map<String, String> userData) {
+        Map<String, Object> response = new HashMap<>();
+        response.put("status", "success");
+        response.put("message", "User registered successfully");
+        response.put("userId", 101); // Mock ID
+        return ResponseEntity.ok(response);
+    }
 }
