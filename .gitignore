@@ -1,0 +1,23 @@
+# Maven
+target/
+backend/target/
+*.jar
+*.war
+*.ear
+
+# Eclipse
+.project
+.classpath
+.settings/
+
+# IntelliJ IDEA
+.idea/
+*.iml
+*.iws
+
+# VS Code
+.vscode/
+
+# OS generated files
+.DS_Store
+Thumbs.db
