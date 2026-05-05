@@ -9,4 +9,5 @@ import java.util.List;
 public interface ApplicationRepository extends JpaRepository<Application, Long> {
     List<Application> findByTaskId(Long taskId);
     List<Application> findByVolunteerId(Long volunteerId);
+    java.util.Optional<com.vms.entity.Application> findByVolunteerIdAndTaskId(Long volunteerId, Long taskId);
 }

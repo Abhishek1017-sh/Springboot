@@ -10,11 +10,11 @@ function GlobeWireframe() {
   useFrame((state) => {
     if (meshRef.current) {
       meshRef.current.rotation.y += 0.003;
-      meshRef.current.rotation.x = Math.sin(state.clock.elapsedTime * 0.3) * 0.1;
+      meshRef.current.rotation.x = Math.sin(state.performance.current * 0.0003) * 0.1;
     }
     if (pointsRef.current) {
       pointsRef.current.rotation.y += 0.003;
-      pointsRef.current.rotation.x = Math.sin(state.clock.elapsedTime * 0.3) * 0.1;
+      pointsRef.current.rotation.x = Math.sin(state.performance.current * 0.0003) * 0.1;
     }
   });
 

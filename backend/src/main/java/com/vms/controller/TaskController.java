@@ -40,4 +40,9 @@ public class TaskController {
         taskService.rejectApplication(id);
         return ResponseEntity.ok().build();
     }
+
+    @GetMapping("/tasks/{taskId}/status")
+    public ResponseEntity<?> getApplicationStatus(@PathVariable Long taskId, @RequestParam Long volunteerId) {
+        return ResponseEntity.ok(taskService.getApplicationStatus(volunteerId, taskId));
+    }
 }

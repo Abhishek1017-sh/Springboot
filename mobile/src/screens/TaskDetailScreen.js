@@ -20,18 +20,54 @@ const { width } = Dimensions.get('window');
 
 export default function TaskDetailScreen({ route, navigation }) {
   const { task } = route.params;
+  const [applied, setApplied] = useState(false);
   const [applying, setApplying] = useState(false);
+
+  React.useEffect(() => {
+    checkApplicationStatus();
+  }, []);
+
+  const checkApplicationStatus = async () => {
+    try {
+      const response = await apiClient.get(`/tasks/${task.id}/status`, { 
+        params: { volunteerId: 1 } 
+      });
+      if (response.data) {
+        setApplied(true);
+      }
+    } catch (error) {
+      console.error('Error checking status:', error);
+    }
+  };
 
   const handleApply = async () => {
     setApplying(true);
     try {
-      await apiClient.post('/tasks/apply', { taskId: task.id });
+      await apiClient.post('/tasks/apply', { taskId: task.id, volunteerId: 1 });
       Alert.alert('Success', 'Application submitted! Get ready to make an impact.');
-      navigation.goBack();
+      setApplied(true);
     } catch (error) {
       console.error('Error applying:', error);
       Alert.alert('Applied!', 'Application successfully submitted (Mock Mode).');
-      navigation.goBack();
+      setApplied(true);
+    } finally {
+      setApplying(false);
+    }
+  };
+
+  const handleCheckIn = async () => {
+    setApplying(true);
+    try {
+      await apiClient.post('/attendance/check-in', { 
+        volunteerId: 1, 
+        taskId: task.id, 
+        latitude: 28.6139, 
+        longitude: 77.2090 
+      });
+      Alert.alert('Welcome!', 'Check-in successful. Your hours are being tracked.');
+    } catch (error) {
+      console.error('Check-in error:', error);
+      Alert.alert('Error', 'Could not complete check-in.');
     } finally {
       setApplying(false);
     }
@@ -96,19 +132,24 @@ export default function TaskDetailScreen({ route, navigation }) {
         <TouchableOpacity 
           activeOpacity={0.8}
           style={styles.applyButtonContainer}
-          onPress={handleApply}
+          onPress={applied ? handleCheckIn : handleApply}
           disabled={applying}
         >
           <LinearGradient
-            colors={Colors.gradientPrimary}
+            colors={applied ? ['#00d4ff', '#0083fe'] : Colors.gradientPrimary}
             start={{ x: 0, y: 0 }}
             end={{ x: 1, y: 0 }}
             style={styles.applyButton}
           >
             <Text style={styles.applyText}>
-              {applying ? 'Processing...' : 'Apply for Task'}
+              {applying ? 'Processing...' : (applied ? 'Check In Now' : 'Apply for Task')}
             </Text>
-            <Ionicons name="flash" size={20} color={Colors.textPrimary} style={{ marginLeft: 8 }} />
+            <Ionicons 
+              name={applied ? "location-sharp" : "flash"} 
+              size={20} 
+              color={Colors.textPrimary} 
+              style={{ marginLeft: 8 }} 
+            />
           </LinearGradient>
         </TouchableOpacity>
       </View>

@@ -4,7 +4,8 @@ import lombok.Data;
 
 @Data
 public class CheckInRequest {
+    private Long volunteerId;
     private Long taskId;
-    private String location;
-    // Optional QR code payload can be added here
+    private Double latitude;
+    private Double longitude;
 }

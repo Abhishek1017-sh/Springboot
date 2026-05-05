@@ -60,7 +60,9 @@ public class TaskService {
         return taskRepository.findAll().stream().map(task -> {
             TaskDto dto = new TaskDto();
             dto.setId(task.getId());
-            dto.setEventId(task.getEvent().getId());
+            if (task.getEvent() != null) {
+                dto.setEventId(task.getEvent().getId());
+            }
             dto.setTitle(task.getTitle());
             dto.setDescription(task.getDescription());
             dto.setStartTime(task.getStartTime());
@@ -111,5 +113,17 @@ public class TaskService {
         
         application.setStatus(ApplicationStatus.REJECTED);
         applicationRepository.save(application);
+    }
+
+    public ApplicationDto getApplicationStatus(Long volunteerId, Long taskId) {
+        return applicationRepository.findByVolunteerIdAndTaskId(volunteerId, taskId)
+                .map(app -> {
+                    ApplicationDto dto = new ApplicationDto();
+                    dto.setId(app.getId());
+                    dto.setVolunteerId(app.getVolunteer().getId());
+                    dto.setTaskId(app.getTask().getId());
+                    dto.setStatus(app.getStatus());
+                    return dto;
+                }).orElse(null);
     }
 }

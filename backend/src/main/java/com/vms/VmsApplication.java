@@ -27,11 +27,15 @@ public class VmsApplication {
             SkillRepository skillRepository,
             TaskRepository taskRepository,
             AssignmentRepository assignmentRepository,
+            EventRepository eventRepository,
             MatchingService matchingService) {
         return args -> {
             System.out.println("==================================================");
             System.out.println("🚀 BOOTING UP DEMO FOR MEMBER 4: MATCHING ENGINE");
             System.out.println("==================================================");
+
+            // 0. Create Event
+            Event mainEvent = eventRepository.save(Event.builder().name("Community Outreach").location("City Hall").build());
 
             // 1. Create Skills
             Skill javaSkill = skillRepository.save(new Skill(null, "Java"));
@@ -55,6 +59,7 @@ public class VmsApplication {
                     .description("Create Spring Boot REST APIs")
                     .startTime(LocalDateTime.now().plusDays(1).withHour(10))
                     .endTime(LocalDateTime.now().plusDays(1).withHour(14))
+                    .event(mainEvent)
                     .skills(task1Skills)
                     .build());
 
@@ -67,6 +72,7 @@ public class VmsApplication {
                     .description("Connect React Native to Spring Boot")
                     .startTime(LocalDateTime.now().plusDays(1).withHour(16))
                     .endTime(LocalDateTime.now().plusDays(1).withHour(20))
+                    .event(mainEvent)
                     .skills(task2Skills)
                     .build());
                     
@@ -76,6 +82,7 @@ public class VmsApplication {
                     .description("Overlaps with task 1")
                     .startTime(LocalDateTime.now().plusDays(1).withHour(12))
                     .endTime(LocalDateTime.now().plusDays(1).withHour(15))
+                    .event(mainEvent)
                     .skills(task1Skills)
                     .build());
 
