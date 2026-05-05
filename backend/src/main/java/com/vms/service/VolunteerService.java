@@ -25,11 +25,11 @@ public class VolunteerService {
     private AvailabilityRepository availabilityRepository;
 
     public VolunteerProfileDto getProfile(Long userId) {
-        Volunteer volunteer = volunteerRepository.findById(userId)
+        Volunteer volunteer = volunteerRepository.findByUserId(userId)
             .orElseThrow(() -> new RuntimeException("Volunteer not found"));
             
         VolunteerProfileDto dto = new VolunteerProfileDto();
-        dto.setId(volunteer.getUserId());
+        dto.setId(volunteer.getUser().getId());
         dto.setName(volunteer.getUser().getName());
         dto.setEmail(volunteer.getUser().getEmail());
         dto.setTotalHours(volunteer.getTotalHours());
@@ -59,7 +59,7 @@ public class VolunteerService {
     }
 
     public void updateProfile(Long userId, VolunteerProfileDto dto) {
-        Volunteer volunteer = volunteerRepository.findById(userId)
+        Volunteer volunteer = volunteerRepository.findByUserId(userId)
             .orElseThrow(() -> new RuntimeException("Volunteer not found"));
             
         // Update basic user info if needed (assuming user entity exists)
@@ -98,7 +98,7 @@ public class VolunteerService {
     }
     
     public DashboardDto getDashboard(Long userId) {
-        Volunteer volunteer = volunteerRepository.findById(userId)
+        Volunteer volunteer = volunteerRepository.findByUserId(userId)
             .orElseThrow(() -> new RuntimeException("Volunteer not found"));
             
         DashboardDto dto = new DashboardDto();

@@ -22,11 +22,14 @@ public class Volunteer {
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
+    @Builder.Default
     @Column(name = "total_hours")
     private Double totalHours = 0.0;
 
+    @Builder.Default
     private Double rating = 0.0;
 
+    @Builder.Default
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
         name = "volunteer_skills",
@@ -35,6 +38,7 @@ public class Volunteer {
     )
     private Set<Skill> skills = new HashSet<>();
 
+    @Builder.Default
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
         name = "volunteer_badges",

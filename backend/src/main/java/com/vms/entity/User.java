@@ -2,16 +2,14 @@ package com.vms.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
-import java.time.LocalDate;
-import java.util.List;
 
 @Entity
-@Table(name = "events")
+@Table(name = "users")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class Event {
+public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -19,10 +17,12 @@ public class Event {
     @Column(nullable = false)
     private String name;
 
-    private String location;
+    @Column(unique = true, nullable = false)
+    private String email;
 
-    private LocalDate date;
+    @Column(nullable = false)
+    private String password;
 
-    @OneToMany(mappedBy = "event", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Task> tasks;
+    @Enumerated(EnumType.STRING)
+    private Role role;
 }

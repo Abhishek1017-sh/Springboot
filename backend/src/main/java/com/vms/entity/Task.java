@@ -1,20 +1,23 @@
 package com.vms.entity;
 
 import jakarta.persistence.*;
-import lombok.Data;
+import lombok.*;
 import java.time.LocalDateTime;
 import java.util.Set;
 
 @Entity
 @Table(name = "tasks")
 @Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class Task {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "event_id", nullable = false)
+    @JoinColumn(name = "event_id") // Made nullable for demo purposes
     private Event event;
 
     @Column(nullable = false)
@@ -34,5 +37,5 @@ public class Task {
         joinColumns = @JoinColumn(name = "task_id"),
         inverseJoinColumns = @JoinColumn(name = "skill_id")
     )
-    private Set<Skill> requiredSkills;
+    private Set<Skill> skills; // Changed from requiredSkills to skills to match VmsApplication.java
 }
